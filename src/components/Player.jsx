@@ -1,17 +1,23 @@
 import { useRef } from 'react';
 import { useState } from 'react';
 
-function Player({ initialName, symbol, isActive }) {
+function Player({ initialName, symbol, isActive, onChangeName }) {
 	const [name, setName] = useState(initialName);
 	const [isEditing, setIsEditing] = useState(false);
-	const inputRef = useRef();
+
+	function handleEditSave() {
+		setIsEditing((editing) => !editing);
+
+		if (isEditing) {
+			onChangeName(symbol, name);
+		}
+	}
 
 	return (
 		<li className={isActive ? 'active' : undefined}>
 			<span className='player'>
 				{isEditing ? (
 					<input
-						ref={inputRef}
 						type='text'
 						required
 						value={name}
@@ -22,9 +28,7 @@ function Player({ initialName, symbol, isActive }) {
 				)}
 				<span className='player-symbol'>{symbol}</span>
 			</span>
-			<button onClick={() => setIsEditing((editing) => !editing)}>
-				{isEditing ? 'Save' : 'Edit'}
-			</button>
+			<button onClick={handleEditSave}>{isEditing ? 'Save' : 'Edit'}</button>
 		</li>
 	);
 }
